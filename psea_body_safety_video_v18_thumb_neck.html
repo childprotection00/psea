@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>اللمسات الآمنة واللمسات غير الآمنة</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+:root{--bg:#e9fbf8;--deep:#163e72;--green:#35b86b;--yellow:#f3b733;--red:#e54b4b;--blue:#4ba9ee;--ink:#17314f;--card:#fff;--soft:#f5fbff;--shadow:0 18px 45px rgba(20,70,120,.16);--radius:28px}
+html,body{min-height:100%;font-family:Tajawal,system-ui,sans-serif;background:linear-gradient(180deg,#dff8ff 0%,#ecfff2 100%);color:var(--ink);overflow-x:hidden}
+.screen{display:none;min-height:100vh;padding:18px 14px 28px;align-items:center;justify-content:center}.screen.active{display:flex}.app{width:min(520px,100%);margin:auto}.card{background:rgba(255,255,255,.94);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;border:6px solid rgba(255,255,255,.8)}
+.hero{background:linear-gradient(145deg,#14528f,#0e8b57);color:#fff;text-align:center}.star{font-size:58px;display:inline-block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.18));animation:bob 1.8s ease-in-out infinite}.title{font-size:clamp(28px,8vw,42px);font-weight:900;line-height:1.2;margin:8px 0}.sub{font-size:clamp(16px,4.6vw,20px);font-weight:800;opacity:.92;line-height:1.55}.codeInput{width:100%;margin:22px 0 12px;padding:18px 20px;border-radius:24px;border:4px solid #d5eefb;background:#fff;font-size:30px;font-weight:900;text-align:center;color:#17314f;font-family:Tajawal}.bigBtn{width:100%;border:none;border-radius:999px;background:linear-gradient(135deg,#ffd641,#f5a400);color:#3b2100;font-family:Tajawal;font-weight:900;font-size:28px;padding:18px 26px;box-shadow:0 12px 28px rgba(230,160,0,.28);cursor:pointer}.bigBtn:active{transform:scale(.96)}.smallHint{font-size:13px;font-weight:800;opacity:.78;line-height:1.5;margin-top:10px}.topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}.pill{background:#fff;border-radius:999px;padding:8px 14px;font-weight:900;box-shadow:0 4px 12px rgba(30,90,130,.08);font-size:14px}.progressWrap{flex:1;height:18px;background:#d7edf5;border-radius:999px;overflow:hidden;border:3px solid #fff;box-shadow:inset 0 2px 8px rgba(0,0,0,.08)}.progressFill{height:100%;width:0;background:linear-gradient(90deg,#35b86b,#ffd641);border-radius:999px;transition:width .45s cubic-bezier(.2,.9,.2,1)}
+.videoBox{background:#fff;border-radius:26px;box-shadow:var(--shadow);padding:12px}.videoBox video{width:100%;border-radius:20px;background:#111;display:block;max-height:70vh}.videoMsg{text-align:center;font-weight:900;font-size:20px;margin:14px 0;color:#1c4c7b}.playGate{margin-top:12px}.disabled{opacity:.45;pointer-events:none;filter:grayscale(.4)}
+.gameTitle{text-align:center;font-size:clamp(22px,6vw,32px);font-weight:900;color:#164672;line-height:1.2;margin:4px 0 2px}.gameSub{text-align:center;font-size:15px;font-weight:800;color:#5e7c98;margin-bottom:10px}.bodyStage{position:relative;background:linear-gradient(180deg,#fff 0%,#f8fdff 100%);border-radius:30px;box-shadow:var(--shadow);padding:10px 6px 4px;overflow:hidden}.bodySvg{width:100%;max-width:285px;margin:0 auto;display:block;overflow:visible}.partShape{fill:transparent;stroke:transparent;stroke-width:0;pointer-events:none}.partShape.active{stroke:#ffd12e;stroke-width:5;fill:rgba(255,209,46,.28);filter:drop-shadow(0 0 16px rgba(255,209,46,.95));animation:pulse 1s ease-in-out infinite}.partShape.teach{stroke:#2d7ff9;stroke-width:5;fill:rgba(45,127,249,.18);filter:drop-shadow(0 0 14px rgba(45,127,249,.55));animation:pulse .9s ease-in-out infinite}.feedbackOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transform:scale(.92);transition:.22s}.feedbackOverlay.show{opacity:1;transform:scale(1)}.feedbackBubble{min-width:190px;min-height:140px;border-radius:34px;background:rgba(255,255,255,.96);box-shadow:0 20px 55px rgba(0,0,0,.20);border:8px solid #35b86b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.feedbackBubble.protect{border-color:#e54b4b}.feedbackBubble.demo{border-color:#35b86b}.feedbackIcon{font-size:72px;line-height:1}.feedbackMini{font-size:40px;line-height:1}
+.guide{position:absolute;left:-8px;bottom:6px;width:118px;height:158px;transform-origin:bottom center;transition:.25s;pointer-events:none}.guide svg{width:100%;height:100%;overflow:visible}.guide.happy{animation:guideBounce .48s ease}.guide.protect{animation:guideStep .55s ease}.guideHandNo{opacity:0;transform-origin:26px 42px}.guide.protect .guideHandNo{opacity:1;animation:noWave .52s ease-in-out 2}.guideThumb{opacity:0}.guide.happy .guideThumb{opacity:1}.faceMouth{transition:.2s}.guide.happy .faceMouth{d:path('M31 38 Q42 50 53 38')}.guide.protect .faceMouth{d:path('M31 46 Q42 38 53 46')}
+.answers{display:flex;gap:12px;justify-content:center;margin:14px 0}.answerBtn{flex:1;max-width:132px;aspect-ratio:1/1;border-radius:28px;border:6px solid #fff;background:#fff;font-size:56px;box-shadow:0 10px 24px rgba(20,70,120,.14);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}.answerBtn:active{transform:scale(.92)}.answerBtn.pulseCorrect{animation:correctPulse .7s ease 2;border-color:#35b86b;background:#e5faee}.answerBtn.yes{border-color:#35b86b;background:#e9fbef;color:#0f8c45}.answerBtn.no{border-color:#e54b4b;background:#fff0f0;color:#d62828}.answerBtn.pulseCorrect{animation:correctPulse .7s ease 2;border-color:#35b86b!important;background:#e5faee!important}.doneCard{text-align:center}.doneIcon{font-size:80px;animation:bob 1.4s ease-in-out infinite}.logNote{display:none!important}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@keyframes pulse{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.04);opacity:1}}@keyframes guideBounce{0%,100%{transform:translateY(0)}45%{transform:translateY(-10px)}}@keyframes guideStep{0%,100%{transform:translateX(0)}50%{transform:translateX(8px)}}@keyframes noWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-18deg)}}@keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.reviewMap{margin:18px 0}.reviewVideo{position:relative;width:100%;border-radius:28px;overflow:hidden;background:#fff;box-shadow:0 12px 32px rgba(20,70,120,.14);border:6px solid #eef8ff}.reviewVideo img{width:100%;display:block}.reviewBodySvg{width:100%;max-width:330px;margin:0 auto;display:block;overflow:visible}.reviewPartShape{fill:transparent;stroke:transparent;stroke-width:0;pointer-events:none}.reviewPartShape.teach{stroke:#ffd12e;stroke-width:5;fill:rgba(255,209,46,.24);filter:drop-shadow(0 0 14px rgba(255,209,46,.85));animation:pulse .9s ease-in-out infinite}.reviewSpot{position:absolute;width:42px;height:42px;border-radius:50%;border:4px solid #ffd12e;background:rgba(255,209,46,.16);box-shadow:0 0 0 5px rgba(255,209,46,.10),0 0 12px rgba(255,209,46,.75);transform:translate(-50%,-50%) scale(.6);opacity:0;transition:.35s;animation:pulse .9s ease-in-out infinite}.reviewSpot.show{opacity:1;transform:translate(-50%,-50%) scale(1)}.reviewMarkBig{position:absolute;font-size:42px;line-height:1;transform:translate(-50%,-50%) scale(.55);opacity:0;text-shadow:0 4px 10px rgba(0,0,0,.14);transition:.35s}.reviewMarkBig.show{opacity:1;transform:translate(-50%,-50%) scale(1)}.reviewFinalMark{position:absolute;font-size:30px;line-height:1;transform:translate(-50%,-50%);text-shadow:0 3px 8px rgba(0,0,0,.12);z-index:5;pointer-events:none}.reviewFinalMark.check{filter:drop-shadow(0 4px 8px rgba(20,180,70,.28))}.reviewFinalMark.x{filter:drop-shadow(0 4px 8px rgba(220,40,40,.22))}.playAgainHidden{opacity:.35;pointer-events:none;filter:grayscale(.4)}.handComfortCue{position:absolute;right:12px;top:62px;background:#e5faee;border:6px solid #35b86b;border-radius:30px;padding:10px 18px;font-size:54px;box-shadow:0 12px 28px rgba(53,184,107,.28);opacity:0;transform:scale(.8);transition:.22s;pointer-events:none}.handComfortCue.show{opacity:1;transform:scale(1);animation:correctPulse .7s ease 2}
+@media (max-width:420px){.card{padding:18px}.answerBtn{font-size:48px;border-radius:22px}.guide{width:82px;height:118px}.bodySvg{max-width:250px}.feedbackBubble{min-width:160px;min-height:120px}.feedbackIcon{font-size:60px}}
+</style>
+</head>
+<body>
+<section class="screen active" id="codeScreen"><div class="app"><div class="card hero"><div class="star">🛡️</div><h1 class="title">اللمسات الآمنة<br>واللمسات غير الآمنة</h1><p class="sub">أدخل الرمز لتبدأ</p><input id="codeInput" class="codeInput" autocomplete="off" inputmode="text" placeholder="الرمز"/><button class="bigBtn" id="startBtn">ابدأ ⭐</button><div class="smallHint">يقبل أي رمز مكتوب</div></div></div></section>
+<section class="screen" id="videoScreen"><div class="app"><div class="topbar"><div class="pill">🎬</div><div class="progressWrap"><div class="progressFill" id="videoProgress"></div></div></div><div class="videoBox"><video id="pseaVideo" playsinline preload="metadata" controls poster=""><source src="psea_video.mp4" type="video/mp4"></video></div><div class="videoMsg" id="videoMsg">شاهد الفيديو إذا كان الإنترنت مناسبًا</div><button class="bigBtn disabled" id="goGameBtn" disabled>إنهاء ⭐</button></div></section>
+<section class="screen" id="gameScreen"><div class="app"><div class="topbar"><div class="pill">🛡️</div><div class="progressWrap"><div class="progressFill" id="bodyProgress"></div></div></div><h2 class="gameTitle">اللمسات الآمنة واللمسات غير الآمنة</h2><div class="gameSub">هل هذه اللمسة آمنة؟</div><div class="bodyStage" id="bodyStage"><svg class="bodySvg" viewBox="0 0 220 390" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="110" cy="380" rx="60" ry="8" fill="#b6dcb0" opacity=".5"/>
+<path d="M74 258 Q69 303 71 346 Q74 363 86 363 Q97 363 98 346 Q98 305 94 258 Z" fill="#f9c59a"/><path d="M126 258 Q122 305 122 346 Q123 363 135 363 Q147 363 149 346 Q151 303 146 258 Z" fill="#f9c59a"/><ellipse cx="85" cy="361" rx="18" ry="10" fill="#2b64b0"/><ellipse cx="136" cy="361" rx="18" ry="10" fill="#2b64b0"/>
+<path d="M62 158 Q56 200 57 246 Q58 265 68 274 Q88 282 110 282 Q132 282 152 274 Q162 265 163 246 Q164 200 158 158 Z" fill="#65bde8"/><path d="M89 158 Q110 187 131 158" stroke="#4da7d6" stroke-width="3" fill="none"/>
+<path d="M60 165 Q42 177 37 211 Q34 238 49 245 Q63 250 69 235 Q71 205 60 165 Z" fill="#f9c59a"/><path d="M160 165 Q178 177 183 211 Q186 238 171 245 Q157 250 151 235 Q149 205 160 165 Z" fill="#f9c59a"/>
+<path d="M49 241 Q40 260 43 280 Q45 292 58 292 Q70 292 72 280 Q73 259 65 244 Z" fill="#f9c59a"/><path d="M171 241 Q180 260 177 280 Q175 292 162 292 Q150 292 148 280 Q147 259 155 244 Z" fill="#f9c59a"/>
+<!-- natural downward hands with visible fingers on main character -->
+<g id="main-hand-left" aria-hidden="true">
+  <!-- natural hand hanging down: fingers point downward, away from body -->
+  <path d="M45 286 Q55 280 67 286 Q71 294 67 303 Q61 309 52 306 Q44 302 43 293 Q43 289 45 286 Z" fill="#f9c59a" stroke="#d78a5e" stroke-width="1.35"/>
+  <path d="M48 299 L48 315" stroke="#f9c59a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M54 301 L54 318" stroke="#f9c59a" stroke-width="6.4" stroke-linecap="round"/>
+  <path d="M60 301 L60 317" stroke="#f9c59a" stroke-width="6.4" stroke-linecap="round"/>
+  <path d="M66 298 L66 313" stroke="#f9c59a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M46 294 L39 305" stroke="#f9c59a" stroke-width="5.8" stroke-linecap="round"/>
+  <path d="M48 299 L48 315 M54 301 L54 318 M60 301 L60 317 M66 298 L66 313 M46 294 L39 305" stroke="#d78a5e" stroke-width="1.05" stroke-linecap="round" opacity=".75"/>
+  <path d="M49 291 Q56 296 64 291" stroke="#d78a5e" stroke-width="1.25" fill="none" stroke-linecap="round" opacity=".65"/>
+</g>
+<g id="main-hand-right" aria-hidden="true">
+  <!-- natural hand hanging down: fingers point downward, away from body -->
+  <path d="M175 286 Q165 280 153 286 Q149 294 153 303 Q159 309 168 306 Q176 302 177 293 Q177 289 175 286 Z" fill="#f9c59a" stroke="#d78a5e" stroke-width="1.35"/>
+  <path d="M172 299 L172 315" stroke="#f9c59a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M166 301 L166 318" stroke="#f9c59a" stroke-width="6.4" stroke-linecap="round"/>
+  <path d="M160 301 L160 317" stroke="#f9c59a" stroke-width="6.4" stroke-linecap="round"/>
+  <path d="M154 298 L154 313" stroke="#f9c59a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M174 294 L181 305" stroke="#f9c59a" stroke-width="5.8" stroke-linecap="round"/>
+  <path d="M172 299 L172 315 M166 301 L166 318 M160 301 L160 317 M154 298 L154 313 M174 294 L181 305" stroke="#d78a5e" stroke-width="1.05" stroke-linecap="round" opacity=".75"/>
+  <path d="M171 291 Q164 296 156 291" stroke="#d78a5e" stroke-width="1.25" fill="none" stroke-linecap="round" opacity=".65"/>
+</g>
+<rect x="96" y="141" width="28" height="28" rx="8" fill="#f9c59a"/><ellipse cx="110" cy="94" rx="56" ry="58" fill="#f9c59a"/><ellipse cx="54" cy="96" rx="10" ry="13" fill="#f3b486"/><ellipse cx="166" cy="96" rx="10" ry="13" fill="#f3b486"/>
+<path d="M60 85 Q55 55 77 38 Q98 20 128 31 Q153 41 160 83 Q138 69 111 69 Q83 69 60 85 Z" fill="#6a3a18"/><path d="M76 40 Q104 24 134 41" stroke="#7b4720" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+<ellipse cx="91" cy="94" rx="12" ry="13" fill="#fff"/><ellipse cx="129" cy="94" rx="12" ry="13" fill="#fff"/><circle cx="91" cy="96" r="6" fill="#18324a"/><circle cx="129" cy="96" r="6" fill="#18324a"/><path d="M96 120 Q110 132 124 120" stroke="#c75b55" stroke-width="4" fill="none" stroke-linecap="round" id="mainMouth"/>
+<ellipse id="part-hand-l" class="partShape" cx="58" cy="296" rx="24" ry="20"/><ellipse id="part-hand-r" class="partShape" cx="162" cy="296" rx="24" ry="20"/>
+<ellipse id="part-shoulder-l" class="partShape" cx="63" cy="177" rx="24" ry="22"/><ellipse id="part-shoulder-r" class="partShape" cx="157" cy="177" rx="24" ry="22"/>
+<ellipse id="part-arm-l" class="partShape" cx="51" cy="230" rx="22" ry="58"/><ellipse id="part-arm-r" class="partShape" cx="169" cy="230" rx="22" ry="58"/>
+<ellipse id="part-hair" class="partShape" cx="110" cy="57" rx="56" ry="41"/><ellipse id="part-ear-l" class="partShape" cx="54" cy="96" rx="18" ry="22"/><ellipse id="part-ear-r" class="partShape" cx="166" cy="96" rx="18" ry="22"/>
+<ellipse id="part-mouth" class="partShape" cx="110" cy="122" rx="30" ry="18"/><rect id="part-chest" class="partShape" x="72" y="166" width="76" height="55" rx="16"/><rect id="part-stomach" class="partShape" x="74" y="220" width="72" height="42" rx="15"/><rect id="part-private" class="partShape" x="82" y="263" width="56" height="35" rx="14"/>
+</svg><div class="guide" id="guide"><svg viewBox="0 0 96 138" aria-hidden="true">
+  <ellipse cx="48" cy="130" rx="30" ry="6" fill="#91c791" opacity=".35"/>
+  <!-- resting arms with rounded hands -->
+  <path d="M28 70 Q21 92 25 113" stroke="#f8bd8d" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <circle cx="25" cy="115" r="7" fill="#f8bd8d"/>
+  <path d="M68 70 Q75 92 71 113" stroke="#f8bd8d" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <circle cx="71" cy="115" r="7" fill="#f8bd8d"/>
+  <path d="M27 64 Q48 50 69 64 L73 116 Q48 125 23 116 Z" fill="#36b375"/>
+  <rect x="39" y="48" width="18" height="18" rx="6" fill="#f8bd8d"/>
+  <circle cx="48" cy="33" r="28" fill="#f8bd8d"/>
+  <path d="M22 29 Q23 11 48 8 Q73 11 74 29 Q61 20 48 20 Q34 20 22 29" fill="#5c3217"/>
+  <circle cx="38" cy="33" r="4" fill="#142033"/>
+  <circle cx="58" cy="33" r="4" fill="#142033"/>
+  <path class="faceMouth" d="M37 45 Q48 55 59 45" stroke="#9d3e38" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <!-- clear thumbs-up hand: closed fingers + raised thumb, like 👍 -->
+  <g class="guideThumb" transform="translate(-12,38) scale(1.18)">
+    <!-- wrist -->
+    <rect x="0" y="21" width="9" height="19" rx="4" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1.1"/>
+    <!-- palm -->
+    <path d="M8 18 Q10 12 18 12 L28 12 Q35 12 35 20 L35 33 Q35 40 27 40 L13 40 Q7 40 7 33 Z" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1.25"/>
+    <!-- four curled fingers, horizontal and clearly separated -->
+    <rect x="17" y="13" width="18" height="6.2" rx="3.1" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1"/>
+    <rect x="17" y="19" width="19" height="6.2" rx="3.1" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1"/>
+    <rect x="16" y="25" width="18" height="6.2" rx="3.1" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1"/>
+    <rect x="15" y="31" width="15" height="6" rx="3" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1"/>
+    <!-- raised thumb -->
+    <path d="M13 19 C13 14 14 9 16 4 C18 0 24 1 24 6 C24 11 21 15 19 18 Z" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1.25"/>
+    <path d="M12 37 Q20 42 30 37" stroke="#d98a5f" stroke-width="1" fill="none" stroke-linecap="round" opacity=".6"/>
+  </g>
+
+  <!-- clear NO hand: open palm, all fingers visible, away from body -->
+  <g class="guideHandNo" transform="translate(-16,25) scale(1.22)">
+    <path d="M13 20 Q13 13 19 13 Q25 13 25 20 L25 35 Q25 42 18 42 L8 42 Q2 42 2 35 L2 25 Q2 20 7 20 Z" fill="#f8bd8d" stroke="#d98a5f" stroke-width="1.4"/>
+    <path d="M7 20 V7" stroke="#f8bd8d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M13 19 V3" stroke="#f8bd8d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M19 19 V4" stroke="#f8bd8d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M25 22 V9" stroke="#f8bd8d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M4 30 L-5 23" stroke="#f8bd8d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M7 20 V7 M13 19 V3 M19 19 V4 M25 22 V9 M4 30 L-5 23" stroke="#d98a5f" stroke-width="1" stroke-linecap="round" opacity=".65"/>
+    <path d="M-2 47 L35 8" stroke="#e54b4b" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg></div><div class="handComfortCue" id="handComfortCue">✅</div><div class="feedbackOverlay" id="feedbackOverlay"><div class="feedbackBubble" id="feedbackBubble"><div class="feedbackIcon" id="feedbackIcon">👍</div><div class="feedbackMini" id="feedbackMini">✨</div></div></div></div><div class="answers"><button class="answerBtn yes" data-answer="check">✅</button><button class="answerBtn no" data-answer="x">❌</button></div></div></section>
+<section class="screen" id="reviewScreen"><div class="app"><div class="topbar"><div class="pill">👀</div><div class="progressWrap"><div class="progressFill" style="width:100%"></div></div></div><div class="card doneCard"><div class="doneIcon">🧩</div><h1 class="title" style="color:#164672">شوف الخريطة</h1><div class="reviewMap" id="reviewMap"><div class="reviewVideo" id="reviewVideo"><svg class="reviewBodySvg" viewBox="0 0 220 390" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <ellipse cx="110" cy="382" rx="55" ry="7" fill="#a8cca8" opacity=".42"/>
+  <path d="M75 270 Q68 315 70 352 Q73 369 84 369 Q95 369 96 352 Q96 314 93 270 Z" fill="#f6c49a"/>
+  <path d="M127 270 Q124 314 124 352 Q126 369 137 369 Q148 369 151 352 Q151 314 146 270 Z" fill="#f6c49a"/>
+  <ellipse cx="84" cy="370" rx="17" ry="9" fill="#4878dc"/><ellipse cx="138" cy="370" rx="17" ry="9" fill="#4878dc"/>
+  <path d="M62 166 Q58 204 59 244 Q60 266 69 276 Q88 285 110 285 Q132 285 151 276 Q160 266 161 244 Q162 204 158 166 Z" fill="#68c4f2"/>
+  <path d="M62 166 Q48 174 40 198 Q34 218 38 235 Q42 249 54 251 Q65 251 69 239 Q72 218 69 200 Q67 180 62 166 Z" fill="#f6c49a"/>
+  <path d="M158 166 Q172 174 180 198 Q186 218 182 235 Q178 249 166 251 Q155 251 151 239 Q148 218 151 200 Q153 180 158 166 Z" fill="#f6c49a"/>
+  <path d="M39 235 Q30 253 33 270 Q35 281 48 284 Q59 285 63 274 Q66 259 61 246 Q53 237 39 235 Z" fill="#f6c49a"/>
+  <path d="M181 235 Q190 253 187 270 Q185 281 172 284 Q161 285 157 274 Q154 259 159 246 Q167 237 181 235 Z" fill="#f6c49a"/>
+  <!-- natural downward hands with visible fingers on review character -->
+<g id="review-hand-left" aria-hidden="true">
+  <!-- natural hand hanging down for the clean teaching body -->
+  <path d="M35 281 Q45 275 57 281 Q61 289 57 298 Q51 304 42 301 Q34 297 33 288 Q33 284 35 281 Z" fill="#f6c49a" stroke="#d78a5e" stroke-width="1.3"/>
+  <path d="M38 294 L38 310" stroke="#f6c49a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M44 296 L44 313" stroke="#f6c49a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M50 296 L50 312" stroke="#f6c49a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M56 293 L56 308" stroke="#f6c49a" stroke-width="5.8" stroke-linecap="round"/>
+  <path d="M36 289 L29 300" stroke="#f6c49a" stroke-width="5.6" stroke-linecap="round"/>
+  <path d="M38 294 L38 310 M44 296 L44 313 M50 296 L50 312 M56 293 L56 308 M36 289 L29 300" stroke="#d78a5e" stroke-width="1" stroke-linecap="round" opacity=".75"/>
+  <path d="M39 286 Q46 291 54 286" stroke="#d78a5e" stroke-width="1.15" fill="none" stroke-linecap="round" opacity=".65"/>
+</g>
+<g id="review-hand-right" aria-hidden="true">
+  <!-- natural hand hanging down for the clean teaching body -->
+  <path d="M185 281 Q175 275 163 281 Q159 289 163 298 Q169 304 178 301 Q186 297 187 288 Q187 284 185 281 Z" fill="#f6c49a" stroke="#d78a5e" stroke-width="1.3"/>
+  <path d="M182 294 L182 310" stroke="#f6c49a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M176 296 L176 313" stroke="#f6c49a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M170 296 L170 312" stroke="#f6c49a" stroke-width="6.2" stroke-linecap="round"/>
+  <path d="M164 293 L164 308" stroke="#f6c49a" stroke-width="5.8" stroke-linecap="round"/>
+  <path d="M184 289 L191 300" stroke="#f6c49a" stroke-width="5.6" stroke-linecap="round"/>
+  <path d="M182 294 L182 310 M176 296 L176 313 M170 296 L170 312 M164 293 L164 308 M184 289 L191 300" stroke="#d78a5e" stroke-width="1" stroke-linecap="round" opacity=".75"/>
+  <path d="M181 286 Q174 291 166 286" stroke="#d78a5e" stroke-width="1.15" fill="none" stroke-linecap="round" opacity=".65"/>
+</g>
+  <rect x="96" y="145" width="28" height="26" rx="9" fill="#f6c49a"/>
+  <ellipse cx="110" cy="96" rx="56" ry="58" fill="#f6c49a"/>
+  <ellipse cx="55" cy="97" rx="10" ry="14" fill="#efae82"/><ellipse cx="165" cy="97" rx="10" ry="14" fill="#efae82"/>
+  <path d="M57 88 Q53 57 67 38 Q82 17 110 17 Q138 17 153 38 Q167 57 163 88 Q150 73 132 69 Q120 67 110 68 Q100 67 88 69 Q70 73 57 88 Z" fill="#62371b"/>
+  <ellipse cx="91" cy="94" rx="12" ry="13" fill="#fff"/><ellipse cx="129" cy="94" rx="12" ry="13" fill="#fff"/>
+  <circle cx="91" cy="96" r="6" fill="#18324a"/><circle cx="129" cy="96" r="6" fill="#18324a"/>
+  <path d="M96 120 Q110 132 124 120" stroke="#c75b55" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse id="review-part-hand-l" class="reviewPartShape" cx="48" cy="288" rx="24" ry="20"/><ellipse id="review-part-hand-r" class="reviewPartShape" cx="172" cy="288" rx="24" ry="20"/>
+  <ellipse id="review-part-shoulder-l" class="reviewPartShape" cx="63" cy="177" rx="25" ry="23"/><ellipse id="review-part-shoulder-r" class="reviewPartShape" cx="157" cy="177" rx="25" ry="23"/>
+  <ellipse id="review-part-arm-l" class="reviewPartShape" cx="52" cy="234" rx="23" ry="58"/><ellipse id="review-part-arm-r" class="reviewPartShape" cx="168" cy="234" rx="23" ry="58"/>
+  <ellipse id="review-part-hair" class="reviewPartShape" cx="110" cy="55" rx="56" ry="42"/>
+  <ellipse id="review-part-ear-l" class="reviewPartShape" cx="55" cy="97" rx="18" ry="22"/><ellipse id="review-part-ear-r" class="reviewPartShape" cx="165" cy="97" rx="18" ry="22"/>
+  <ellipse id="review-part-mouth" class="reviewPartShape" cx="110" cy="122" rx="30" ry="18"/>
+  <rect id="review-part-neck" class="reviewPartShape" x="94" y="141" width="32" height="32" rx="11"/>
+  <rect id="review-part-chest" class="reviewPartShape" x="72" y="166" width="76" height="55" rx="16"/>
+  <rect id="review-part-stomach" class="reviewPartShape" x="74" y="220" width="72" height="42" rx="15"/>
+  <rect id="review-part-private" class="reviewPartShape" x="82" y="263" width="56" height="35" rx="14"/>
+</svg><div class="reviewSpot" id="reviewSpot"></div><div class="reviewMarkBig" id="reviewMarkBig">✅</div></div></div><button class="bigBtn playAgainHidden" id="playAgainBtn">العب مرة تانية ⭐</button></div></div></section><section class="screen" id="doneScreen"><div class="app"><div class="card doneCard"><div class="doneIcon">🎉</div><h1 class="title" style="color:#164672">خلصت اللعبة</h1><p class="sub" style="color:#416984">شكرًا لمشاركتك</p></div></div></section>
+<script>
+(function(){
+'use strict';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxJ5fGUyMnqN6u5MiL5sM-lIJ7ZlDfBy7n_TSLFWUWXPoIWRilq4zOgMZscE7HEW1_BbQ/exec';
+const GAME_VERSION='v12_apps_script_logger';
+let childCode='', sessionId='', bodyIndex=0, videoCompleted=false, startedAt=Date.now();
+let currentAttempts=0, round=1, partStartTime=Date.now();
+let firstRoundFirstAnswers={};
+let firstRoundFinalAnswers={};
+let secondRoundFirstAnswers={};
+let preSummary=null;
+const logs=[];
+const bodyParts=[
+ {key:'hand', label:'Hand', expected:'check', ids:['part-hand-l','part-hand-r']},
+ {key:'shoulder', label:'Shoulder', expected:'x', ids:['part-shoulder-l','part-shoulder-r']},
+ {key:'arm', label:'Arm', expected:'x', ids:['part-arm-l','part-arm-r']},
+ {key:'hair', label:'Hair', expected:'x', ids:['part-hair']},
+ {key:'ear', label:'Ear', expected:'x', ids:['part-ear-l','part-ear-r']},
+ {key:'mouth', label:'Mouth', expected:'x', ids:['part-mouth']},
+ {key:'chest', label:'Chest', expected:'x', ids:['part-chest']},
+ {key:'stomach', label:'Stomach', expected:'x', ids:['part-stomach']},
+ {key:'private_area', label:'Private area', expected:'x', ids:['part-private']}
+];
+const screens={code:document.getElementById('codeScreen'), video:document.getElementById('videoScreen'), game:document.getElementById('gameScreen'), review:document.getElementById('reviewScreen'), done:document.getElementById('doneScreen')};
+const codeInput=document.getElementById('codeInput'), startBtn=document.getElementById('startBtn'), video=document.getElementById('pseaVideo'), videoProgress=document.getElementById('videoProgress'), goGameBtn=document.getElementById('goGameBtn'), videoMsg=document.getElementById('videoMsg'), bodyProgress=document.getElementById('bodyProgress'), feedbackOverlay=document.getElementById('feedbackOverlay'), feedbackBubble=document.getElementById('feedbackBubble'), feedbackIcon=document.getElementById('feedbackIcon'), feedbackMini=document.getElementById('feedbackMini'), guide=document.getElementById('guide'), mainMouth=document.getElementById('mainMouth'), reviewMap=document.getElementById('reviewMap'), reviewVideo=document.getElementById('reviewVideo'), reviewSpot=document.getElementById('reviewSpot'), reviewMarkBig=document.getElementById('reviewMarkBig'), playAgainBtn=document.getElementById('playAgainBtn'), handComfortCue=document.getElementById('handComfortCue');
+function show(name){Object.values(screens).forEach(s=>s.classList.remove('active'));screens[name].classList.add('active');}
+function uid(){return 's_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function nowIso(){return new Date().toISOString()}
+function sendPayload(payload){
+  payload.game_version = payload.game_version || GAME_VERSION;
+  payload.session_id = payload.session_id || sessionId;
+  payload.child_code = payload.child_code || childCode;
+  logs.push(Object.assign({timestamp:nowIso()}, payload));
+  if(!APPS_SCRIPT_URL) return;
+  const body=JSON.stringify(payload);
+  try{
+    if(typeof fetch==='function'){
+      fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body}).catch(()=>sendBeaconFallback(body));
+    }else{
+      sendBeaconFallback(body);
+    }
+  }catch(e){sendBeaconFallback(body);}
+}
+function sendBeaconFallback(body){
+  try{
+    if(navigator && navigator.sendBeacon){
+      const blob=new Blob([body],{type:'text/plain;charset=utf-8'});
+      navigator.sendBeacon(APPS_SCRIPT_URL,blob);
+    }
+  }catch(e){}
+}
+function log(eventType,data){
+  data=data||{};
+  // Map the older in-game events to Claude's Apps Script payload schema.
+  if(eventType==='session_start'){
+    sendPayload({type:'session_event',event_type:'session_started',user_agent:navigator.userAgent});
+    return;
+  }
+  if(eventType==='video_started'){
+    sendPayload({type:'video_event',event_type:'video_started',watched_seconds:0,percent_watched:0});
+    return;
+  }
+  if(eventType==='video_completed'){
+    sendPayload({type:'video_event',event_type:'video_completed',watched_seconds:data.watched_seconds||0,percent_watched:data.watched_percent||data.percent_watched||100});
+    return;
+  }
+  if(eventType==='body_game_start'){
+    sendPayload({type:'session_event',event_type:(data.round===2?'round_2_started':'round_1_started'),user_agent:navigator.userAgent});
+    return;
+  }
+  if(eventType==='body_response'){
+    sendPayload({
+      type:'body_response',
+      round_number:data.round,
+      body_part:data.body_part,
+      selected_answer:data.response||data.selected_answer,
+      expected_answer:data.expected_response||data.expected_answer,
+      is_correct:!!data.is_correct,
+      attempt_number:data.attempt_number||1,
+      response_time_ms:data.response_time_ms||''
+    });
+    return;
+  }
+  if(eventType==='body_round_completed'){
+    sendPayload({
+      type:'score_event',
+      round_number:data.round,
+      correct_count:data.first_try_exact_matches||0,
+      total_count:data.total_items||bodyParts.length,
+      score_percent:data.body_score||0
+    });
+    return;
+  }
+  if(eventType==='body_game_completed'){
+    sendPayload({type:'session_event',event_type:'game_completed',user_agent:navigator.userAgent});
+    return;
+  }
+  if(eventType==='session_finish_pressed'){
+    sendPayload({type:'session_event',event_type:'finish_pressed',user_agent:navigator.userAgent});
+    return;
+  }
+  // Do not send local hint/debug events to Apps Script unless schema supports them.
+  logs.push(Object.assign({timestamp:nowIso(),event_type:eventType,local_only:true},data));
+}
+let audioCtx=null;function audio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended')audioCtx.resume(); return audioCtx;}
+function tone(freq,dur,type='sine',gain=.12,delay=0){const ctx=audio();const o=ctx.createOscillator();const g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,ctx.currentTime+delay);g.gain.linearRampToValueAtTime(gain,ctx.currentTime+delay+.02);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+dur);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+dur+.03)}
+function sound(kind){try{if(kind==='ok'){tone(523,.12,'sine',.10);tone(784,.16,'sine',.09,.09);tone(1046,.16,'sine',.07,.18);}else if(kind==='protect'){tone(220,.14,'triangle',.10);tone(330,.16,'triangle',.08,.13);}else if(kind==='focus'){tone(880,.08,'sine',.055);}}catch(e){}}
+function bind(el,fn){el.addEventListener('click',fn);el.addEventListener('touchstart',function(e){e.preventDefault();fn(e)},{passive:false});}
+
+function setFinishLocked(locked){
+  if(!goGameBtn) return;
+  goGameBtn.disabled = !!locked;
+  goGameBtn.classList.toggle('disabled', !!locked);
+}
+bind(startBtn,()=>{childCode=(codeInput.value||'').trim()||'بدون رمز'; sessionId=uid(); startedAt=Date.now(); sound('ok'); log('session_start',{phase:'code'}); log('body_game_start',{round:round,attempt_type:round===1?'pre':'post'}); show('game'); setTimeout(startPart,350);});
+video.addEventListener('play',()=>{sound('focus');log('video_started',{video_current_time:Math.round(video.currentTime||0)});});
+video.addEventListener('timeupdate',()=>{const p=video.duration?Math.min(100,(video.currentTime/video.duration)*100):0; videoProgress.style.width=p+'%'; if(p>=95&&!videoCompleted){videoCompleted=true;videoMsg.textContent='';setFinishLocked(false);log('video_completed',{watched_seconds:Math.round(video.currentTime),video_duration:Math.round(video.duration||0),watched_percent:Math.round(p)});sound('ok');}});
+video.addEventListener('ended',()=>{if(!videoCompleted){videoCompleted=true;videoProgress.style.width='100%';videoMsg.textContent='';log('video_completed',{watched_seconds:Math.round(video.currentTime),video_duration:Math.round(video.duration||0),watched_percent:100});sound('ok');}});
+bind(goGameBtn,()=>{if(!videoCompleted){sound('protect');setFinishLocked(true);return;} sound('ok'); log('session_finish_pressed',{completed:true}); show('done');});
+function clearParts(){document.querySelectorAll('.partShape').forEach(p=>p.classList.remove('active','teach'));}
+function setFace(kind){if(kind==='happy')mainMouth.setAttribute('d','M96 119 Q110 134 124 119'); else if(kind==='protect')mainMouth.setAttribute('d','M96 128 Q110 119 124 128'); else mainMouth.setAttribute('d','M96 120 Q110 132 124 120');}
+function currentExpectedSymbol(part){return part.expected==='check'?'✅':'❌'}
+function resetAnswerButtons(){document.querySelectorAll('.answerBtn').forEach(b=>b.classList.remove('pulseCorrect')); if(handComfortCue)handComfortCue.classList.remove('show');}
+function startPart(){
+  clearParts();
+  resetAnswerButtons();
+  feedbackOverlay.classList.remove('show');
+  guide.className='guide';
+  setFace('neutral');
+  currentAttempts=0;
+  partStartTime=Date.now();
+  if(bodyIndex>=bodyParts.length){finishGame();return;}
+  const part=bodyParts[bodyIndex];
+  part.ids.forEach(id=>{const el=document.getElementById(id); if(el)el.classList.add('active');});
+  bodyProgress.style.width=(bodyIndex/bodyParts.length*100)+'%';
+  sound('focus');
+}
+function keepCurrentPartActive(part){
+  clearParts();
+  part.ids.forEach(id=>{const el=document.getElementById(id); if(el)el.classList.add('active');});
+}
+function teachCorrect(part){
+  resetAnswerButtons();
+  const correct=document.querySelector('.answerBtn[data-answer="'+part.expected+'"]');
+  if(correct) correct.classList.add('pulseCorrect');
+}
+function visualFeedback(mode,part){
+  const positive=(mode==='ok');
+  guide.className='guide '+(positive?'happy':'protect');
+  setFace(positive?'happy':'protect');
+  feedbackBubble.className='feedbackBubble '+(positive?'demo':'protect');
+  if(mode==='ok'){
+    feedbackIcon.textContent='✅';
+    feedbackMini.textContent='👍';
+    sound('ok');
+  }else if(mode==='demo'){
+    feedbackIcon.textContent=currentExpectedSymbol(part);
+    feedbackMini.textContent='✅';
+    sound('ok');
+  }else{
+    if(part && part.key==='hand'){
+      // For hand correction, make the comfortable/check answer very clear.
+      guide.className='guide protect';
+      setFace('protect');
+      feedbackBubble.className='feedbackBubble protect';
+      feedbackIcon.textContent='❌';
+      feedbackMini.textContent='✅';
+      if(handComfortCue)handComfortCue.classList.add('show');
+    }else{
+      feedbackIcon.textContent='❌';
+      feedbackMini.textContent='🙅';
+    }
+    sound('protect');
+  }
+  feedbackOverlay.classList.add('show');
+}
+function moveNextAfter(delay){
+  setTimeout(()=>{
+    resetAnswerButtons();
+    clearParts();
+    feedbackOverlay.classList.remove('show');
+    guide.className='guide';
+    setFace('neutral');
+    bodyIndex++;
+    bodyProgress.style.width=(bodyIndex/bodyParts.length*100)+'%';
+    setTimeout(startPart,250);
+  }, delay);
+}
+document.querySelectorAll('.answerBtn').forEach(btn=>bind(btn,()=>{
+  if(bodyIndex>=bodyParts.length)return;
+  const part=bodyParts[bodyIndex];
+  const ans=btn.dataset.answer;
+  const expected=part.expected;
+  const exact=ans===expected;
+  currentAttempts++;
+  if(currentAttempts===1){
+    if(round===1) firstRoundFirstAnswers[part.key]=ans;
+    else secondRoundFirstAnswers[part.key]=ans;
+  }
+  log('body_response',{round:round,attempt_type:round===1?'pre':'post',body_part:part.key,body_part_label:part.label,response:ans,expected_response:expected,exact_match:exact,is_correct:exact,attempt_number:currentAttempts,step_number:bodyIndex+1,response_time_ms:Date.now()-partStartTime});
+  if(exact){
+    if(round===1) firstRoundFinalAnswers[part.key]=ans;
+    visualFeedback('ok',part);
+    moveNextAfter(850);
+    return;
+  }
+  keepCurrentPartActive(part);
+  teachCorrect(part);
+  visualFeedback('wrong',part);
+  // Never auto-advance on a wrong answer. The child must choose the expected face.
+  if(currentAttempts>=2){
+    log('body_hint_shown',{round:round,body_part:part.key,body_part_label:part.label,expected_response:expected,step_number:bodyIndex+1,attempts:currentAttempts});
+  }
+  setTimeout(()=>{
+    feedbackOverlay.classList.remove('show');
+    guide.className='guide';
+    setFace('neutral');
+    keepCurrentPartActive(part);
+    teachCorrect(part);
+    if(part.key==='hand' && handComfortCue) handComfortCue.classList.add('show');
+  },900);
+}));
+function partIcon(key){return {hand:'🤲',shoulder:'💪',arm:'💪',hair:'🧒',ear:'👂',mouth:'👄',chest:'👕',stomach:'🧍',private_area:'🩳'}[key]||'●'}
+function renderReview(){
+  playAgainBtn.classList.add('playAgainHidden');
+  if(reviewSpot) reviewSpot.classList.remove('show');
+  if(reviewMarkBig) reviewMarkBig.classList.remove('show');
+  if(reviewVideo) reviewVideo.querySelectorAll('.reviewFinalMark').forEach(el=>el.remove());
+  document.querySelectorAll('.reviewPartShape').forEach(el=>el.classList.remove('teach'));
+
+  // Teaching animation: hands are ALWAYS shown first with ✅.
+  // The red ❌ sequence never includes the hands, so children do not learn that hand touch is wrong.
+  const teachingSteps=[
+    {key:'hand_l', mark:'✅', x:22, y:74, kind:'check', ids:['review-part-hand-l']},
+    {key:'hand_r', mark:'✅', x:78, y:74, kind:'check', ids:['review-part-hand-r']},
+    {key:'hair', mark:'❌', x:50, y:14, kind:'x', ids:['review-part-hair']},
+    {key:'ear_l', mark:'❌', x:25, y:25, kind:'x', ids:['review-part-ear-l']},
+    {key:'ear_r', mark:'❌', x:75, y:25, kind:'x', ids:['review-part-ear-r']},
+    {key:'mouth', mark:'❌', x:50, y:31, kind:'x', ids:['review-part-mouth']},
+    {key:'neck', mark:'❌', x:50, y:38, kind:'x', ids:['review-part-neck']},
+    {key:'shoulder_l', mark:'❌', x:29, y:46, kind:'x', ids:['review-part-shoulder-l']},
+    {key:'shoulder_r', mark:'❌', x:71, y:46, kind:'x', ids:['review-part-shoulder-r']},
+    {key:'arm_l', mark:'❌', x:24, y:60, kind:'x', ids:['review-part-arm-l']},
+    {key:'arm_r', mark:'❌', x:76, y:60, kind:'x', ids:['review-part-arm-r']},
+    {key:'chest', mark:'❌', x:50, y:47, kind:'x', ids:['review-part-chest']},
+    {key:'stomach', mark:'❌', x:50, y:59, kind:'x', ids:['review-part-stomach']},
+    {key:'private_area', mark:'❌', x:50, y:72, kind:'x', ids:['review-part-private']}
+  ];
+
+  function setSpotStyle(kind){
+    if(!reviewSpot) return;
+    if(kind==='check'){
+      reviewSpot.style.borderColor='#32c267';
+      reviewSpot.style.borderWidth='4px';
+      reviewSpot.style.background='rgba(50,194,103,.16)';
+      reviewSpot.style.boxShadow='0 0 0 5px rgba(50,194,103,.12),0 0 12px rgba(50,194,103,.75)';
+    }else{
+      reviewSpot.style.borderColor='#ff3b30';
+      reviewSpot.style.borderWidth='4px';
+      reviewSpot.style.background='rgba(255,59,48,.12)';
+      reviewSpot.style.boxShadow='0 0 0 5px rgba(255,59,48,.09),0 0 12px rgba(255,59,48,.65)';
+    }
+  }
+
+  function addFinalMark(step){
+    if(!reviewVideo) return;
+    // Safety guard: hands must never receive an X mark in the teaching map.
+    if((step.key==='hand_l'||step.key==='hand_r') && step.mark==='❌') return;
+    const m=document.createElement('div');
+    m.className='reviewFinalMark '+(step.kind==='check'?'check':'x');
+    m.textContent=step.mark;
+    m.style.left=step.x+'%';
+    m.style.top=step.y+'%';
+    reviewVideo.appendChild(m);
+  }
+
+  let i=0;
+  function step(){
+    if(i>=teachingSteps.length){
+      if(reviewSpot) reviewSpot.classList.remove('show');
+      if(reviewMarkBig) reviewMarkBig.classList.remove('show');
+      document.querySelectorAll('.reviewPartShape').forEach(el=>el.classList.remove('teach'));
+      playAgainBtn.classList.remove('playAgainHidden');
+      sound('ok');
+      return;
+    }
+    const item=teachingSteps[i];
+    document.querySelectorAll('.reviewPartShape').forEach(el=>el.classList.remove('teach'));
+    (item.ids||[]).forEach(id=>{const el=document.getElementById(id); if(el) el.classList.add('teach');});
+    setSpotStyle(item.kind);
+    if(reviewSpot){
+      reviewSpot.style.left=item.x+'%';
+      reviewSpot.style.top=item.y+'%';
+      reviewSpot.classList.add('show');
+    }
+    if(reviewMarkBig){
+      reviewMarkBig.textContent=item.mark;
+      reviewMarkBig.style.left=item.x+'%';
+      reviewMarkBig.style.top=item.y+'%';
+      reviewMarkBig.classList.add('show');
+    }
+    sound(item.kind==='check'?'ok':'protect');
+    setTimeout(()=>{ addFinalMark(item); if(reviewMarkBig)reviewMarkBig.classList.remove('show'); },760);
+    setTimeout(()=>{ i++; step(); },1100);
+  }
+  setTimeout(step,550);
+}
+function summarizeRound(r){
+  const answers = r===1 ? firstRoundFirstAnswers : secondRoundFirstAnswers;
+  let exact=0; bodyParts.forEach(p=>{ if(answers[p.key]===p.expected) exact++; });
+  const score=Math.round((exact/bodyParts.length)*100);
+  log('body_round_completed',{round:r,attempt_type:r===1?'pre':'post',first_try_exact_matches:exact,total_items:bodyParts.length,body_score:score,completed:true,total_seconds:Math.round((Date.now()-startedAt)/1000)});
+  return {exact,score};
+}
+function finishGame(){
+  bodyProgress.style.width='100%';
+  if(round===1){
+    preSummary=summarizeRound(1);
+    renderReview();
+    sound('ok');
+    show('review');
+    return;
+  }
+  const pre=preSummary||summarizeRound(1);
+  const post=summarizeRound(2);
+  log('body_game_completed',{pre_score:pre.score,post_score:post.score,improvement_points:post.score-pre.score,total_items:bodyParts.length,completed:true,total_seconds:Math.round((Date.now()-startedAt)/1000)});
+  sound('ok'); videoProgress.style.width='0%'; videoCompleted=false; setFinishLocked(true); if(video){ try{ video.currentTime=0; }catch(e){} } show('video');
+}
+bind(playAgainBtn,()=>{
+  round=2; bodyIndex=0; currentAttempts=0; bodyProgress.style.width='0%'; resetAnswerButtons(); clearParts();
+  log('body_game_start',{round:round,attempt_type:'post'});
+  show('game'); setTimeout(startPart,350);
+});
+})();
+</script>
+</body>
+</html>
